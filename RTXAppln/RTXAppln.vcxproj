@@ -73,18 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
     <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IncludePath>$(SolutionDir)vendor\;$(SolutionDir)vendor\backends;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
     <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
+    <IncludePath>$(SolutionDir)inc;$(SolutionDir)vendor\;$(SolutionDir)vendor\backends;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
+    <IncludePath>$(SolutionDir)vendor\;$(SolutionDir)vendor\backends;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(Platform)\</IntDir>
+    <IncludePath>$(SolutionDir)vendor\;$(SolutionDir)vendor\backends;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -124,6 +128,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,7 +148,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="vendor\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="vendor\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="vendor\imgui.cpp" />
+    <ClCompile Include="vendor\imgui_demo.cpp" />
+    <ClCompile Include="vendor\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="inc\Application.h" />
+    <ClInclude Include="vendor\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="vendor\backends\imgui_impl_win32.h" />
+    <ClInclude Include="vendor\imconfig.h" />
+    <ClInclude Include="vendor\imgui.h" />
+    <ClInclude Include="vendor\imgui_internal.h" />
+    <ClInclude Include="vendor\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imstb_textedit.h" />
+    <ClInclude Include="vendor\imstb_truetype.h" />
+    <ClInclude Include="vendor\stb_image .h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
