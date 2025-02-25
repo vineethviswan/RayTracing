@@ -16,11 +16,15 @@ int main()
 	// Appliation
 	{
 		Application *app = new Application(L"Ray Tracing", 1309, 605);
+		std::shared_ptr<Layer> imageLayer = std::make_shared<Layer>();			
+		app->SetLayer(imageLayer);
+
 		app->Run();
 
 		// Delete the app before exiting
-		if (app)
+		if (app) {						
 			delete app;
+		}
 	}
 
 	return 0;

@@ -2,6 +2,8 @@
 
 #include <d3d11.h>
 #include <cstdint>
+#include <memory>
+#include "Layer.h"
 
 class Application
 {
@@ -15,12 +17,11 @@ public:
 	void Run();
 	void Close();
 	HWND GetWindowHandle() const { return m_WindowHandle; }
-	
-	// static methods
-	static ID3D11Device* GetDevice();
-
+		
 	void UpdateWindowSize(uint32_t width, uint32_t height);
 	void ResizeWindow();
+
+	void SetLayer(std::shared_ptr<Layer> layer);
 
 private:
 
@@ -46,4 +47,9 @@ private:
 	bool m_Running = false;
 	uint32_t m_ResizeHeight;
 	uint32_t m_ResizeWidth;	
+
+	// Layers
+	std::shared_ptr<Layer> m_Layer;
+
+	ID3D11ShaderResourceView* m_ShaderView = nullptr;
 };

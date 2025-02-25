@@ -3,12 +3,10 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "imgui.h"
-#include <string>
+#include "DirectXDefs.h"
+#include "Layer.h"
 
-static ID3D11Device* g_pd3dDevice = nullptr;
-static ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
-static IDXGISwapChain* g_pSwapChain = nullptr;
-static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+#include <string>
 
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -62,9 +60,9 @@ void Application::Init()
   
 }
 
-ID3D11Device* Application::GetDevice()
+void Application::SetLayer(std::shared_ptr<Layer> layer)
 {
-    return g_pd3dDevice;
+	m_Layer = layer;
 }
 
 bool Application::CreateDevice3D()
@@ -132,6 +130,7 @@ void Application::ClearRenderTargetView()
 void Application::Run()
 {
     m_Running = true;
+    bool b_rendering = false;
     
     while (m_Running)
     {
@@ -159,17 +158,33 @@ void Application::Run()
         {
             if (ImGui::Button("Render"))
             {
-
+                b_rendering = true;
             }            
         }
         ImGui::End();
 
         ImGui::SetNextWindowSize(ImVec2(960, 559));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("Viewport", nullptr/*, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove*/);
+        ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
-        //ImGui::Text(" Viewport: %dx%d", (ImGui::GetContentRegionAvail().x), (ImGui::GetContentRegionAvail().y));
-        
+        float viewport_width = ImGui::GetContentRegionAvail().x;
+        float viewport_height = ImGui::GetContentRegionAvail().y;
+
+        if (b_rendering)
+        {
+            if (m_Layer->IsReady())
+            {
+                if (m_Layer->IsImageChanged(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height)))
+                {
+                    m_Layer->Init(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height));
+                    m_Layer->RenderImage();
+                    b_rendering = false;
+                }
+                m_ShaderView = m_Layer->GetShaderResourceView();
+                ImGui::Image((void*)m_ShaderView, ImVec2(viewport_width, viewport_height));
+            }            
+        }
+
         ImGui::End();
         ImGui::PopStyleVar();
 
