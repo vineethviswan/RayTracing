@@ -172,17 +172,14 @@ void Application::Run()
 
         if (b_rendering)
         {
-            if (m_Layer->IsReady())
-            {
-                if (m_Layer->IsImageChanged(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height)))
-                {
-                    m_Layer->Init(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height));
-                    m_Layer->RenderImage();
-                    b_rendering = false;
-                }
-                m_ShaderView = m_Layer->GetShaderResourceView();
-                ImGui::Image((void*)m_ShaderView, ImVec2(viewport_width, viewport_height));
-            }            
+			if (m_Layer->IsImageChanged(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height)))
+			{
+				m_Layer->Init(static_cast<uint32_t>(viewport_width), static_cast<uint32_t>(viewport_height));
+				m_Layer->RenderImage();
+				//b_rendering = false; //TODO
+			}
+			m_ShaderView = m_Layer->GetShaderResourceView();
+			ImGui::Image((void*)m_ShaderView, ImVec2(viewport_width, viewport_height));
         }
 
         ImGui::End();

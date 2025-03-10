@@ -13,13 +13,11 @@ public:
 	void RenderImage();
 	void Init(uint32_t width, uint32_t height);
 	ID3D11ShaderResourceView* GetShaderResourceView() const;
-	bool IsImageChanged(uint32_t width, uint32_t height) const;
-	bool IsReady() const { return m_IsReady; }
+	bool IsImageChanged(uint32_t width, uint32_t height) const;	
 
 private:
 	unsigned char* m_ImageData;
 	Image *m_FinalImage;
-	uint32_t m_Width, m_Height;
-	bool m_IsReady;
+	uint32_t m_Width, m_Height;	
 };
 

@@ -13,8 +13,7 @@ void Layer::Init(uint32_t width, uint32_t height)
 Layer::Layer() :
 	m_ImageData (nullptr),
 	m_FinalImage (nullptr),
-    m_Width (0), m_Height(0),
-	m_IsReady (false)
+    m_Width (0), m_Height(0)
 {	
 }
 
@@ -30,8 +29,7 @@ Layer::~Layer()
 	{
 		delete m_FinalImage;
 		m_FinalImage = nullptr;
-	}
-	m_IsReady = false;
+	}	
 }
 
 ID3D11ShaderResourceView* Layer::GetShaderResourceView() const
@@ -63,13 +61,12 @@ void Layer::RenderImage()
 			int ig = int(255.999 * g);
 			int ib = int(255.999 * b);
 
-			m_ImageData[x + y * line_width] = static_cast<int>(256 * ir);
-			m_ImageData[x + y * line_width + 1] = static_cast<int>(256 * ig);
-			m_ImageData[x + y * line_width + 2] = static_cast<int>(256 * ib);
+			m_ImageData[x + y * line_width] = ir;
+			m_ImageData[x + y * line_width + 1] = ig;
+			m_ImageData[x + y * line_width + 2] = ib;
 			m_ImageData[x + y * line_width + 3] = 0xFF;
 		}
 	}
 	m_FinalImage->SetData(m_ImageData);
-	m_FinalImage->CreateTexture();
-	m_IsReady = true;
+	m_FinalImage->CreateTexture();	
 }
