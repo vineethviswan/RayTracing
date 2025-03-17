@@ -152,6 +152,7 @@
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Vector3.cpp" />
     <ClCompile Include="vendor\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="vendor\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="vendor\imgui.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="inc\DirectXDefs.h" />
     <ClInclude Include="inc\Image.h" />
     <ClInclude Include="inc\Layer.h" />
+    <ClInclude Include="inc\Vector3.h" />
     <ClInclude Include="vendor\backends\imgui_impl_dx11.h" />
     <ClInclude Include="vendor\backends\imgui_impl_win32.h" />
     <ClInclude Include="vendor\imconfig.h" />

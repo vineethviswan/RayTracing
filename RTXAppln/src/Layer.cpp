@@ -1,5 +1,6 @@
 
 #include "Layer.h"
+#include "Vector3.h"
 
 void Layer::Init(uint32_t width, uint32_t height)
 {
@@ -53,17 +54,11 @@ void Layer::RenderImage()
 	{
 		for (x = 0; x < line_width; x += 4)
 		{
-			auto r = double(x) / (line_width - 1);
-			auto g = double(y) / (m_Height - 1);
-			auto b = 0.0;
-
-			int ir = int(255.999 * r);
-			int ig = int(255.999 * g);
-			int ib = int(255.999 * b);
-
-			m_ImageData[x + y * line_width] = ir;
-			m_ImageData[x + y * line_width + 1] = ig;
-			m_ImageData[x + y * line_width + 2] = ib;
+			Color pixel_color = Color(double(x) / (line_width - 1), double(y) / (m_Height - 1), 0.0);
+						
+			m_ImageData[x + y * line_width] = int(255.999 * pixel_color.GetX());
+			m_ImageData[x + y * line_width + 1] = int(255.999 * pixel_color.GetY());
+			m_ImageData[x + y * line_width + 2] = int(255.999 * pixel_color.GetZ());
 			m_ImageData[x + y * line_width + 3] = 0xFF;
 		}
 	}
