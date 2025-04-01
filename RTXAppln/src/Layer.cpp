@@ -63,7 +63,7 @@ void Layer::RenderImage()
 			auto ray_direction = pixel_center - camera_center;
 			Ray r(camera_center, ray_direction);
 			
-			Color pixel_color = r.RayColor(r);			
+			Color pixel_color = RayColor(r);			
 						
 			m_ImageData[x + y * line_width] = int(255.999 * pixel_color.GetX());
 			m_ImageData[x + y * line_width + 1] = int(255.999 * pixel_color.GetY());

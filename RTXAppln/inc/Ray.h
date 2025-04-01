@@ -25,15 +25,15 @@ public:
 		return m_origin + (m_direction * t);
 	}
 
-	Color RayColor(const Ray& r) {
-		Vector3 unit_direction = UnitVector(r.GetDirection());
-		auto a = 0.5 * (unit_direction.GetY() + 1.0);
-		return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
-	}
-
 private:
 	Point3 m_origin;
 	Vector3 m_direction;
 };
+
+Color RayColor(const Ray& r) {
+	Vector3 unit_direction = UnitVector(r.GetDirection());
+	auto a = 0.5 * (unit_direction.GetY() + 1.0);
+	return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
+}
 
 #endif // !_RAY_H
