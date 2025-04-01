@@ -26,4 +26,6 @@ private:
 
 	ID3D11Texture2D* m_Texture;
 	ID3D11ShaderResourceView* m_srv;
+
+	double m_AspectRatio;
 };

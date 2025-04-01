@@ -1,6 +1,7 @@
 
 #include "Layer.h"
 #include "Vector3.h"
+#include "Ray.h"
 
 void Layer::Init(uint32_t width, uint32_t height)
 {
@@ -9,6 +10,8 @@ void Layer::Init(uint32_t width, uint32_t height)
 
 	m_ImageData = new unsigned char[width * height * 4];
 	m_FinalImage = new Image(width, height, ImageFormat::RGBA);
+
+	m_PixelData = m_Camera.Init(width, height);
 }
 
 Layer::Layer() :
@@ -50,11 +53,17 @@ void Layer::RenderImage()
 	uint32_t y = 0;
 	uint32_t x = 0;
 
+	auto camera_center = Point3(0, 0, 0);
+
 	for (; y < m_Height; y++)
 	{
 		for (x = 0; x < line_width; x += 4)
 		{
-			Color pixel_color = Color(double(x) / (line_width - 1), double(y) / (m_Height - 1), 0.0);
+			auto pixel_center = m_PixelData.pixel_00_location + (x * m_PixelData.pixel_delta_u) + (y * m_PixelData.pixel_delta_v);
+			auto ray_direction = pixel_center - camera_center;
+			Ray r(camera_center, ray_direction);
+			
+			Color pixel_color = r.RayColor(r);			
 						
 			m_ImageData[x + y * line_width] = int(255.999 * pixel_color.GetX());
 			m_ImageData[x + y * line_width + 1] = int(255.999 * pixel_color.GetY());

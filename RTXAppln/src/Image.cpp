@@ -8,7 +8,8 @@ Image::Image() : m_Width (0),
 				 m_Format (ImageFormat::RGBA),
 				 m_ImageBuffer(nullptr),
 			     m_Texture(nullptr),
-				 m_srv(nullptr)
+				 m_srv(nullptr),
+				 m_AspectRatio(16.0 / 9.0)
 {
 }
 
@@ -28,12 +29,16 @@ void Image::SetData(unsigned char* data)
 
 Image::Image(uint32_t width, uint32_t height, ImageFormat format)
 {
-	m_Format = format;
-	m_Width = width;
-	m_Height = height;
+	m_Format = format;	
 	m_ImageBuffer = nullptr;
 	m_Texture = nullptr;
 	m_srv = nullptr;
+
+	// Calculate the image height, ensure that it's atleast 1
+	m_Width = width;
+	m_Height = static_cast<uint32_t>(width / m_AspectRatio);
+	m_Height = (m_Height < 1) ? 1 : m_Height;
+
 }
 
 void Image::CreateTexture()

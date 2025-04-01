@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <memory>
 #include "Image.h"
+#include "Camera.h"
 
 class Layer
 {
@@ -19,5 +20,8 @@ private:
 	unsigned char* m_ImageData;
 	Image *m_FinalImage;
 	uint32_t m_Width, m_Height;	
+
+	Camera m_Camera;
+	PixelData m_PixelData;
 };
 
