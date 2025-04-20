@@ -39,12 +39,6 @@ bool Vector3::NearZero() const
 	return (fabs(m_x) < s) && (fabs(m_y) < s) && (fabs(m_z) < s);
 }
 
-
-double Dot(const Vector3& u, const Vector3& v) 
-{
-	return u.GetX() * v.GetX() + u.GetY() * v.GetY() + u.GetZ() * v.GetZ();
-}
-
 Vector3 Cross(const Vector3& u, const Vector3& v) 
 {
 	return Vector3(u.GetY() * v.GetZ() - u.GetZ() * v.GetY(),

@@ -69,7 +69,10 @@ inline Vector3 operator/(const Vector3& v, double t)
 	return (1 / t) * v;
 }
 
-double Dot(const Vector3& u, const Vector3& v);
+inline double Dot(const Vector3& u, const Vector3& v)
+{
+	return u.GetX() * v.GetX() + u.GetY() * v.GetY() + u.GetZ() * v.GetZ();
+}
 
 inline Vector3 Reflect(const Vector3& v, const Vector3& n)
 {
