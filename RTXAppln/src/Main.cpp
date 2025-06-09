@@ -7,21 +7,27 @@
  * ---------------------------------------------------------------------------------*/
 
 #include <iostream>
-#include <Application.h>
+
+#include "Application.h"
+#include "RayTracingLayer.h"
+#include "UILayer.h"
 
 int main()
 {
 	std::cout << "RAY TRACING !!!\n";
+    
+    // Initialize application
+    Application app;
 
-	// Appliation
-	{
-		Application *app = new Application(L"Ray Tracing", 1309, 605);
-		app->Run();
+    // Create layers
+    auto rayTracingLayer = std::make_unique<RayTracingLayer> ();
+    auto uiLayer = std::make_unique<UILayer> ();
 
-		// Delete the app before exiting
-		if (app)
-			delete app;
-	}
+    app.PushLayer (rayTracingLayer.get ());
+    app.PushLayer (uiLayer.get ());
 
+    // Run application
+    app.Run ();
+    
 	return 0;
 }

@@ -160,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Application.h" />
+    <ClInclude Include="inc\Layer.h" />
+    <ClInclude Include="inc\RayTracingLayer.h" />
+    <ClInclude Include="inc\UILayer.h" />
     <ClInclude Include="vendor\backends\imgui_impl_dx11.h" />
     <ClInclude Include="vendor\backends\imgui_impl_win32.h" />
     <ClInclude Include="vendor\imconfig.h" />
@@ -169,6 +172,9 @@
     <ClInclude Include="vendor\imstb_textedit.h" />
     <ClInclude Include="vendor\imstb_truetype.h" />
     <ClInclude Include="vendor\stb_image .h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgui.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
