@@ -6,28 +6,28 @@
  * References : https://raytracing.github.io/books/RayTracingInOneWeekend.html
  * ---------------------------------------------------------------------------------*/
 
-#include <iostream>
-
 #include "Application.h"
-#include "RayTracingLayer.h"
-#include "UILayer.h"
-
-int main()
+#include "Layer.h"
+#include "Logger.h"
+ 
+class TestLayer : public Layer
 {
-	std::cout << "RAY TRACING !!!\n";
-    
-    // Initialize application
-    Application app;
+    void OnUpdate (float deltaTime) override
+    {
+        // Log frame time, input handling
+    }
 
-    // Create layers
-    auto rayTracingLayer = std::make_unique<RayTracingLayer> ();
-    auto uiLayer = std::make_unique<UILayer> ();
+    void OnRender () override
+    {
+        // Draw test triangle        
+    }
+};
 
-    app.PushLayer (rayTracingLayer.get ());
-    app.PushLayer (uiLayer.get ());
+// Main function test
+int main ()
+{
+    Logger::Log (Logger::Level::INFO, "Ray Tracing!!");
 
-    // Run application
+    Application app;    
     app.Run ();
-    
-	return 0;
 }

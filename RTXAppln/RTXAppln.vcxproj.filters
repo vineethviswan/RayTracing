@@ -42,6 +42,12 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LayerStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\backends\imgui_impl_dx11.h">
@@ -77,14 +83,19 @@
     <ClInclude Include="inc\Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\RayTracingLayer.h">
+    <ClInclude Include="inc\LayerStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\UILayer.h">
+    <ClInclude Include="inc\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+    <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
   </ItemGroup>
 </Project>
