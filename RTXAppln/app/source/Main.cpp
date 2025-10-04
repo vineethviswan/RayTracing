@@ -2,32 +2,26 @@
 /* ---------------------------------------------------------------------------------
  * RAY TRACING
  * Started  : 02-Feb-2025
- * Finished : 
+ * Finished :
  * References : https://raytracing.github.io/books/RayTracingInOneWeekend.html
  * ---------------------------------------------------------------------------------*/
 
+#include "AppLayer.h"
 #include "Application.h"
-#include "Layer.h"
 #include "Logger.h"
- 
-class TestLayer : public Layer
-{
-    void OnUpdate (float deltaTime) override
-    {
-        // Log frame time, input handling
-    }
 
-    void OnRender () override
-    {
-        // Draw test triangle        
-    }
-};
-
-// Main function test
 int main ()
 {
-    Logger::Log (Logger::Level::INFO, "Ray Tracing!!");
+    Logger::Log (Logger::Level::INFO, "Ray Tracing !!!");
 
-    Application app;    
+    AppSpecification appSpec;
+    appSpec.Name = L"RayTracer";
+    appSpec.WindowSpec.Width = 1309;
+    appSpec.WindowSpec.Height = 605;
+
+    Application app (appSpec);
+    app.PushLayer (std::make_unique<AppLayer> ());
     app.Run ();
+
+    return 0;
 }

@@ -14,7 +14,7 @@ public:
         DEBUG,
         INFO,
         WARNING,
-        ERROR
+        ERR
     };
 
     static void Log (Level level, std::string_view message)
@@ -46,7 +46,7 @@ private:
                 return "INFO";
             case Level::WARNING:
                 return "WARNING";
-            case Level::ERROR:
+            case Level::ERR:
                 return "ERROR";
             default:
                 return "UNKNOWN";
@@ -63,7 +63,7 @@ private:
                 return "\033[32m"; // Green
             case Level::WARNING:
                 return "\033[33m"; // Yellow
-            case Level::ERROR:
+            case Level::ERR:
                 return "\033[31m"; // Red
             default:
                 return "\033[0m"; // Reset
