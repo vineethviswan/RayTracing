@@ -153,6 +153,7 @@
     <ClCompile Include="app\source\AppLayer.cpp" />
     <ClCompile Include="app\source\Main.cpp" />
     <ClCompile Include="core\source\Application.cpp" />
+    <ClCompile Include="core\source\Renderer.cpp" />
     <ClCompile Include="core\source\Window.cpp" />
     <ClCompile Include="vendor\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="vendor\backends\imgui_impl_win32.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="core\source\Application.h" />
     <ClInclude Include="core\source\Layer.h" />
     <ClInclude Include="core\source\Logger.h" />
+    <ClInclude Include="core\source\Renderer.h" />
     <ClInclude Include="core\source\Window.h" />
     <ClInclude Include="vendor\backends\imgui_impl_dx11.h" />
     <ClInclude Include="vendor\backends\imgui_impl_win32.h" />

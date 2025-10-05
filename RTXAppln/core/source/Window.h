@@ -25,6 +25,9 @@ public:
     bool ShouldClose () const;
     HWND GetHandle () const { return m_WindowHandle; }
 
+public:
+    bool m_ShouldClose = false;
+
 private:
     WindowSpecification m_Specification;
     HWND m_WindowHandle;

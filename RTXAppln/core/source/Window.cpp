@@ -8,23 +8,12 @@ Window::Window (const WindowSpecification &specification) : m_Specification (spe
 
 Window::~Window () { Destroy (); }
 
-bool Window::ShouldClose () const
-{
-    MSG msg;
-    while (::PeekMessage (&msg, nullptr, 0U, 0U, PM_REMOVE))
-    {
-        ::TranslateMessage (&msg);
-        ::DispatchMessage (&msg);
-        if (msg.message == WM_QUIT)
-            return true;
-    }
-    return false;
-}
+bool Window::ShouldClose () const { return m_ShouldClose; }
 
 void Window::Create ()
 {
     Logger::Log (Logger::Level::INFO, "Creating Window.");
-    
+
     // Create window
     m_WndClass = {sizeof (m_WndClass), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle (nullptr), nullptr, nullptr,
             nullptr, nullptr, L"WindowClass", nullptr};
@@ -47,7 +36,15 @@ void Window::Destroy ()
     ::UnregisterClassW (m_WndClass.lpszClassName, m_WndClass.hInstance);
 }
 
-void Window::Update () { }
+void Window::Update ()
+{
+    MSG msg;
+    while (::PeekMessage (&msg, nullptr, 0U, 0U, PM_REMOVE))
+    {
+        ::TranslateMessage (&msg);
+        ::DispatchMessage (&msg);
+    }
+}
 
 bool Window::OnSizeChanged (UINT width, UINT height) { return true; }
 
@@ -72,6 +69,8 @@ LRESULT WINAPI WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 return 0;
             break;
         case WM_DESTROY:
+            if (winptr != nullptr)
+                winptr->m_ShouldClose = true;
             ::PostQuitMessage (0);
             return 0;
     }

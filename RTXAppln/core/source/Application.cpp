@@ -16,8 +16,17 @@ Application::Application (const AppSpecification &spec) : m_Specification (spec)
         m_Specification.WindowSpec.Title = m_Specification.Name;
 
     s_Application = this;
+
     m_Window = std::make_shared<Window> (m_Specification.WindowSpec);
     m_Window->Create ();
+    if (!m_Renderer.Initialize (
+                m_Window->GetHandle (), m_Specification.WindowSpec.Width, m_Specification.WindowSpec.Height))
+    {
+        Logger::Log (Logger::Level::ERR, "Failed to initialize Renderer.");
+
+        m_Renderer.CleanupDeviceD3D ();
+        m_Window->Destroy ();
+    }
 }
 
 Application::~Application ()
@@ -31,8 +40,12 @@ void Application::Run ()
     m_Running = true;
     double lastTime = GetTime ();
 
+    // Define a clear color (RGBA)
+    const float clearColor[4] = {0.1f, 0.1f, 0.1f, 1.0f};
+
     while (m_Running)
     {
+        m_Window->Update ();
         if (m_Window->ShouldClose ())
         {
             Stop ();
@@ -43,6 +56,9 @@ void Application::Run ()
         double timestep = std::clamp (currentTime - lastTime, 0.001, 0.1);
         lastTime = currentTime;
 
+        // Start rendering for this frame
+        m_Renderer.BeginFrame (clearColor);
+
         // Main layer update here
         for (const std::unique_ptr<Layer> &layer: m_LayerStack)
             layer->OnUpdate (timestep);
@@ -50,6 +66,9 @@ void Application::Run ()
         // NOTE: rendering can be done elsewhere (eg. render thread)
         for (const std::unique_ptr<Layer> &layer: m_LayerStack)
             layer->OnRender ();
+
+        // End rendering for this frame (present)
+        m_Renderer.EndFrame ();
 
         m_Window->Update ();
     }

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Layer.h"
+#include "Renderer.h"
 #include "Window.h"
 
 struct AppSpecification
@@ -30,6 +31,7 @@ private:
     AppSpecification m_Specification;
     bool m_Running = false;
     std::shared_ptr<Window> m_Window;
+    Renderer m_Renderer;
 
     std::vector<std::unique_ptr<Layer>> m_LayerStack;
 };
