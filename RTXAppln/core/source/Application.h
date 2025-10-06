@@ -7,6 +7,7 @@
 #include "Layer.h"
 #include "Renderer.h"
 #include "Window.h"
+#include "ImGuiLayer.h"
 
 struct AppSpecification
 {
@@ -32,6 +33,7 @@ private:
     bool m_Running = false;
     std::shared_ptr<Window> m_Window;
     Renderer m_Renderer;
+    ImGuiLayer m_ImGuiLayer;
 
     std::vector<std::unique_ptr<Layer>> m_LayerStack;
 };

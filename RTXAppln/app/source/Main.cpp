@@ -9,6 +9,7 @@
 #include "AppLayer.h"
 #include "Application.h"
 #include "Logger.h"
+#include "ImGuiLayer.h"
 
 int main ()
 {
@@ -21,6 +22,7 @@ int main ()
 
     Application app (appSpec);
     app.PushLayer (std::make_unique<AppLayer> ());
+    app.PushLayer (std::make_unique<ImGuiLayer> ());
     app.Run ();
 
     return 0;

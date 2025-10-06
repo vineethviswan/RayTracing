@@ -19,6 +19,8 @@ Application::Application (const AppSpecification &spec) : m_Specification (spec)
 
     m_Window = std::make_shared<Window> (m_Specification.WindowSpec);
     m_Window->Create ();
+
+    // Initialize Renderer
     if (!m_Renderer.Initialize (
                 m_Window->GetHandle (), m_Specification.WindowSpec.Width, m_Specification.WindowSpec.Height))
     {
@@ -27,10 +29,14 @@ Application::Application (const AppSpecification &spec) : m_Specification (spec)
         m_Renderer.CleanupDeviceD3D ();
         m_Window->Destroy ();
     }
+
+    // Initialize ImGuiLayer
+    m_ImGuiLayer.Initialize (m_Window->GetHandle (), m_Renderer.GetDevice (), m_Renderer.GetDeviceContext ());
 }
 
 Application::~Application ()
 {
+    m_ImGuiLayer.Shutdown ();
     m_Window->Destroy ();
     s_Application = nullptr;
 }
@@ -59,6 +65,9 @@ void Application::Run ()
         // Start rendering for this frame
         m_Renderer.BeginFrame (clearColor);
 
+        // ImGui: Begin frame
+        m_ImGuiLayer.BeginFrame ();
+
         // Main layer update here
         for (const std::unique_ptr<Layer> &layer: m_LayerStack)
             layer->OnUpdate (timestep);
@@ -66,6 +75,9 @@ void Application::Run ()
         // NOTE: rendering can be done elsewhere (eg. render thread)
         for (const std::unique_ptr<Layer> &layer: m_LayerStack)
             layer->OnRender ();
+
+        // ImGui: End frame (renders ImGui)
+        m_ImGuiLayer.EndFrame ();
 
         // End rendering for this frame (present)
         m_Renderer.EndFrame ();
