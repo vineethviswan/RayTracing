@@ -134,9 +134,3 @@ void AppLayer::EnqueueRenderJob ()
             });
 }
 
-void AppLayer::RenderNow (Renderer &renderer)
-{
-    // immediate generation + upload on render thread (fast path)
-    GenerateTestPattern ();
-    m_FrontImage->UpdateGPUTexture (renderer.GetDevice (), renderer.GetDeviceContext ());
-}

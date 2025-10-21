@@ -10,8 +10,6 @@
 #include "Image.h"
 #include "Layer.h"
 
-class Renderer; // forward-declare
-
 class AppLayer : public Layer
 {
 public:
@@ -27,9 +25,6 @@ public:
 
     // Enqueue a heavy render job (called from UI thread)
     void EnqueueRenderJob ();
-
-    // Called by the worker or main to perform immediate generation+upload (fast path)
-    void RenderNow (Renderer &renderer);
 
 private:
     // Double-buffering: front used for GPU upload/display, back used by worker
