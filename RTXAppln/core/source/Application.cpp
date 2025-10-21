@@ -29,20 +29,43 @@ Application::Application (const AppSpecification &spec) : m_Specification (spec)
         m_Renderer.CleanupDeviceD3D ();
         m_Window->Destroy ();
     }
-
-    // Initialize ImGuiLayer
-    m_ImGuiLayer.Initialize (m_Window->GetHandle (), m_Renderer.GetDevice (), m_Renderer.GetDeviceContext ());
 }
 
 Application::~Application ()
 {
-    m_ImGuiLayer.Shutdown ();
+    if (m_ImGuiLayer)
+        m_ImGuiLayer->Shutdown ();
+
     m_Window->Destroy ();
     s_Application = nullptr;
 }
 
+ImGuiLayer *Application::GetImGuiLayer ()
+{
+    for (const auto &layer: m_LayerStack)
+    {
+        if (auto imguiLayer = dynamic_cast<ImGuiLayer *> (layer.get ()))
+            return imguiLayer;
+    }
+    return nullptr;
+}
+
+void Application::PushLayer (std::unique_ptr<Layer> &&layer) { m_LayerStack.push_back (std::move (layer)); }
+
 void Application::Run ()
 {
+    // Initialize ImGuiLayer if present
+    m_ImGuiLayer = GetImGuiLayer ();
+    if (m_ImGuiLayer)
+    {
+        m_ImGuiLayer->Initialize (m_Window->GetHandle (), m_Renderer.GetDevice (), m_Renderer.GetDeviceContext ());
+        Logger::Log (Logger::Level::INFO, "Initializing ImGuiLayer.");
+    }
+
+    // Call OnAttach for each layer before the main loop
+    for (const std::unique_ptr<Layer> &layer: m_LayerStack)
+        layer->OnAttach ();
+
     m_Running = true;
     double lastTime = GetTime ();
 
@@ -66,7 +89,7 @@ void Application::Run ()
         m_Renderer.BeginFrame (clearColor);
 
         // ImGui: Begin frame
-        m_ImGuiLayer.BeginFrame ();
+        m_ImGuiLayer->BeginFrame ();
 
         // Main layer update here
         for (const std::unique_ptr<Layer> &layer: m_LayerStack)
@@ -77,7 +100,7 @@ void Application::Run ()
             layer->OnRender ();
 
         // ImGui: End frame (renders ImGui)
-        m_ImGuiLayer.EndFrame ();
+        m_ImGuiLayer->EndFrame ();
 
         // End rendering for this frame (present)
         m_Renderer.EndFrame ();

@@ -1,8 +1,13 @@
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 
-#include "Window.h"
 #include "Logger.h"
+#include "Window.h"
 
 LRESULT WINAPI WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+// Forward declare message handler from imgui_impl_win32.cpp
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 Window::Window (const WindowSpecification &specification) : m_Specification (specification) { }
 
@@ -50,6 +55,8 @@ bool Window::OnSizeChanged (UINT width, UINT height) { return true; }
 
 LRESULT WINAPI WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler (hWnd, msg, wParam, lParam))
+        return true;
 
     Window *winptr = (Window *) GetWindowLongPtr (hWnd, GWLP_USERDATA);
 

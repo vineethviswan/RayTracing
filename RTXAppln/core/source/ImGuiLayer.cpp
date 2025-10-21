@@ -2,9 +2,15 @@
 #include "ImGuiLayer.h"
 #include "Logger.h"
 
+ImGuiLayer::ImGuiLayer (std::shared_ptr<Image> image) :
+    m_ViewportWidth (960), m_ViewportHeight (559), m_Image (std::move (image))
+{
+}
+
 void ImGuiLayer::Initialize (HWND hwnd, ID3D11Device *device, ID3D11DeviceContext *deviceContext)
 {
-    Logger::Log (Logger::Level::INFO, "Initializing ImGui.");    
+    Logger::Log (Logger::Level::INFO, "Initializing ImGui.");
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION ();
     ImGui::CreateContext ();
@@ -50,11 +56,28 @@ void ImGuiLayer::OnRender ()
 {
     ImGui::SetNextWindowSize (ImVec2 (320, 559));
     ImGui::Begin ("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::NewLine ();
+    ImGui::Text ("Last render: %.3f ms", 5.2556f);
+    ImGui::Separator ();
+    if (ImGui::Button ("Render"))
+    {
+        Logger::Log (Logger::Level::DEBUG, "Button pressed...");
+        // enqueue a render job on worker thread (fast non-blocking)
+        if (m_EnqueueRender)
+            m_EnqueueRender ();
+    }
     ImGui::End ();
 
-    ImGui::SetNextWindowSize (ImVec2 (960, 559));
+    ImGui::SetNextWindowSize (ImVec2 (m_ViewportWidth, m_ViewportHeight));
     ImGui::PushStyleVar (ImGuiStyleVar_WindowPadding, ImVec2 (0.0f, 0.0f));
     ImGui::Begin ("Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+
+    if (m_Image && m_Image->GetSRV ())
+    {
+        ImGui::Image (
+                (void *) m_Image->GetSRV (), ImVec2 ((float) m_Image->GetWidth (), (float) m_Image->GetHeight ()));
+    }
+
     ImGui::End ();
     ImGui::PopStyleVar ();
 }

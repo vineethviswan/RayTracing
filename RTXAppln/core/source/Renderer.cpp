@@ -47,6 +47,14 @@ bool Renderer::CreateDeviceD3D (HWND hWnd)
     CreateRenderTargetView ();
     return true;
 }
+
+void Renderer::DrawImage (const class Image &image)
+{
+    // Ensure the image's GPU texture is up-to-date
+    if (image.IsDirty ())
+        const_cast<Image &> (image).UpdateGPUTexture (m_pd3dDevice, m_pd3dDeviceContext);
+}
+
 void Renderer::CleanupDeviceD3D ()
 {
     CleanupRenderTarget ();
@@ -89,7 +97,6 @@ bool Renderer::CreateRenderTargetView ()
 
 bool Renderer::Initialize (HWND hwnd, uint32_t width, uint32_t height)
 {
-
     Logger::Log (Logger::Level::INFO, "Initializing DirectX 11 Renderer...");
 
     m_WindowHandle = hwnd;

@@ -3,6 +3,8 @@
 #include <d3d11.h>
 #include <string>
 
+#include "Image.h"
+
 class Renderer
 {
 public:
@@ -23,6 +25,7 @@ public:
     void CleanupDeviceD3D ();
     bool CreateRenderTargetView ();
     void CleanupRenderTarget ();
+    void DrawImage (const class Image &image);
 
 private:
     ID3D11Device *m_pd3dDevice = nullptr;
