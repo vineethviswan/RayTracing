@@ -20,7 +20,9 @@ public:
     virtual void OnRender () override;
     virtual void OnAttach () override;
 
-    void GenerateTestPattern ();
+    // Generate a test pattern into the provided image (target may be front or back buffer)
+    // Use a non-owning reference to avoid shared_ptr refcount overhead in tight loops.
+    void GenerateTestPattern (Image &target);
     static uint32_t PackColor (double r, double g, double b, double a = 1.0);
 
     // Enqueue a heavy render job (called from UI thread)

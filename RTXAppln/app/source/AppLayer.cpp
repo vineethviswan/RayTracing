@@ -50,7 +50,8 @@ AppLayer::~AppLayer ()
 void AppLayer::OnAttach ()
 {
     // Optionally create an initial preview in front image
-    GenerateTestPattern ();
+    if (m_FrontImage)
+        GenerateTestPattern (*m_FrontImage);
     Logger::Log (Logger::Level::INFO, "AppLayer attached with front image size "
                                               + std::to_string (m_FrontImage->GetWidth ()) + " x "
                                               + std::to_string (m_FrontImage->GetHeight ()));
@@ -66,10 +67,10 @@ uint32_t AppLayer::PackColor (double r, double g, double b, double a)
     return (A << 24) | (B << 16) | (G << 8) | R;
 }
 
-void AppLayer::GenerateTestPattern ()
+void AppLayer::GenerateTestPattern (Image &target)
 {
-    const uint32_t width = m_FrontImage->GetWidth ();
-    const uint32_t height = m_FrontImage->GetHeight ();
+    const uint32_t width = target.GetWidth ();
+    const uint32_t height = target.GetHeight ();
 
     for (uint32_t y = 0; y < height; ++y)
     {
@@ -80,7 +81,7 @@ void AppLayer::GenerateTestPattern ()
             auto b = 0.0;
 
             auto color = PackColor (r, g, b, 1.0);
-            m_FrontImage->SetPixel (x, y, color);
+            target.SetPixel (x, y, color);
         }
     }
 }
@@ -114,20 +115,8 @@ void AppLayer::EnqueueRenderJob ()
             [this] ()
             {
                 // simulate heavy compute; replace with ray tracer implementation
-                const uint32_t width = m_BackImage->GetWidth ();
-                const uint32_t height = m_BackImage->GetHeight ();
-                for (uint32_t y = 0; y < height; ++y)
-                {
-                    for (uint32_t x = 0; x < width; ++x)
-                    {
-                        // simple test pattern (can be expensive in real tracer)
-                        auto r = double (x) / (double) width;
-                        auto g = double (y) / (double) height;
-                        auto b = 0.0;
-                        auto color = PackColor (r, g, b, 1.0);
-                        m_BackImage->SetPixel (x, y, color);
-                    }
-                }
+                if (m_BackImage)
+                    GenerateTestPattern (*m_BackImage);
 
                 // mark back buffer ready for swap
                 m_BackReady.store (true, std::memory_order_release);
