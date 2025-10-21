@@ -61,7 +61,7 @@ void ImGuiLayer::OnRender ()
     ImGui::Separator ();
     if (ImGui::Button ("Render"))
     {
-        Logger::Log (Logger::Level::DEBUG, "Button pressed...");
+        Logger::Log (Logger::Level::INFO, "ImGui: Render button pressed");
         // enqueue a render job on worker thread (fast non-blocking)
         if (m_EnqueueRender)
             m_EnqueueRender ();

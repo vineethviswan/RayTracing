@@ -42,6 +42,7 @@ AppLayer::~AppLayer ()
 {
     m_WorkerRunning = false;
     m_CommandQueue.Shutdown ();
+    Logger::Log (Logger::Level::INFO, "AppLayer: shutting down worker");
     if (m_Worker.joinable ())
         m_Worker.join ();
 }
@@ -108,6 +109,7 @@ void AppLayer::OnRender ()
 void AppLayer::EnqueueRenderJob ()
 {
     // Enqueue a heavy job: writes into back buffer CPU-side only
+    Logger::Log (Logger::Level::INFO, "AppLayer: enqueueing render job");
     m_CommandQueue.Push (
             [this] ()
             {

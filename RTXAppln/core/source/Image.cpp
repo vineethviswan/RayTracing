@@ -71,6 +71,7 @@ void Image::UpdateGPUTexture (ID3D11Device *device, ID3D11DeviceContext *context
     );
 
     m_Dirty = false;
+    Logger::Log (Logger::Level::INFO, "Image: GPU texture updated from CPU data");
 }
 
 void Image::CreateGPUResources (ID3D11Device *device)
@@ -116,12 +117,12 @@ void Image::CreateGPUResources (ID3D11Device *device)
     hr = device->CreateShaderResourceView (m_Texture, &srvDesc, &m_Srv);
     if (FAILED (hr))
     {
-        Logger::Log (Logger::Level::ERR, "Failed to create shader resource view");
+        Logger::Log (Logger::Level::ERR, "Failed to create shader resource view. HRESULT=" + std::to_string (hr));
         m_Texture->Release ();
         m_Texture = nullptr;
         return;
     }
-    Logger::Log (Logger::Level::INFO, "GPU resources created for image");
+    Logger::Log (Logger::Level::INFO, "GPU resources created for image (texture and SRV)");
 }
 
 void Image::ReleaseGPUResources ()
