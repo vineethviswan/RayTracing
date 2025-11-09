@@ -3,7 +3,7 @@
 #include "Logger.h"
 
 ImGuiLayer::ImGuiLayer (std::shared_ptr<Image> image) :
-    m_ViewportWidth (960), m_ViewportHeight (559), m_Image (std::move (image))
+    m_ViewportWidth (960), m_ViewportHeight (560), m_Image (std::move (image))
 {
 }
 
@@ -54,7 +54,7 @@ void ImGuiLayer::OnUpdate (double ts) { }
 
 void ImGuiLayer::OnRender ()
 {
-    ImGui::SetNextWindowSize (ImVec2 (320, 559));
+    ImGui::SetNextWindowSize (ImVec2 (320, 560));
     ImGui::Begin ("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::NewLine ();
     ImGui::Text ("Last render: %.3f ms", 5.2556f);

@@ -1,5 +1,3 @@
-
-
 #include "AppLayer.h"
 #include "Application.h"
 #include "Logger.h"
@@ -49,12 +47,9 @@ AppLayer::~AppLayer ()
 
 void AppLayer::OnAttach ()
 {
-    // Optionally create an initial preview in front image
-    if (m_FrontImage)
-        GenerateTestPattern (*m_FrontImage);
-    Logger::Log (Logger::Level::INFO, "AppLayer attached with front image size "
-                                              + std::to_string (m_FrontImage->GetWidth ()) + " x "
-                                              + std::to_string (m_FrontImage->GetHeight ()));
+    Logger::Log(Logger::Level::INFO, "AppLayer attached with image size "
+        + std::to_string(m_FrontImage->GetWidth()) + " x "
+        + std::to_string(m_FrontImage->GetHeight()));
 }
 
 // Utility function to pack r, g, b, a (all in [0,1]) into a uint32_t RGBA value
@@ -109,17 +104,28 @@ void AppLayer::OnRender ()
 
 void AppLayer::EnqueueRenderJob ()
 {
-    // Enqueue a heavy job: writes into back buffer CPU-side only
-    Logger::Log (Logger::Level::INFO, "AppLayer: enqueueing render job");
-    m_CommandQueue.Push (
-            [this] ()
+    Logger::Log(Logger::Level::INFO, "AppLayer: enqueueing render job");
+    m_CommandQueue.Push([this]()
+    {
+        if (m_BackImage)
+        {
+            // First time: no image showing yet, generate directly into front buffer
+            if (!m_FrontImage->GetSRV())
             {
-                // simulate heavy compute; replace with ray tracer implementation
-                if (m_BackImage)
-                    GenerateTestPattern (*m_BackImage);
-
-                // mark back buffer ready for swap
-                m_BackReady.store (true, std::memory_order_release);
-            });
+                Logger::Log(Logger::Level::INFO, "First render - generating into front buffer");
+                GenerateTestPattern(*m_FrontImage);
+                m_FrontImage->UpdateGPUTexture(Application::Get().GetRenderer().GetDevice(),
+                                               Application::Get().GetRenderer().GetDeviceContext());
+                m_BackReady.store(false, std::memory_order_release);  // Don't swap
+            }
+            else
+            {
+                // Normal case: generate into back buffer for swap
+                Logger::Log(Logger::Level::INFO, "Generating into back buffer");
+                GenerateTestPattern(*m_BackImage);
+                m_BackReady.store(true, std::memory_order_release);  // Signal for swap
+            }
+        }
+    });
 }
 

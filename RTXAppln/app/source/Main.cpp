@@ -23,7 +23,7 @@ int main ()
     Application app (appSpec);
 
     // Create a single shared Image and share it between layers
-    auto sharedImage = std::make_shared<Image> (960, 559);
+    auto sharedImage = std::make_shared<Image> (960, 560);
 
     // Create layers locally so we can wire the enqueue callback
     auto imguiLayerUP = std::make_unique<ImGuiLayer> (sharedImage);
