@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <d3d11.h>
 #include <vector>
+#include "Constants.h"
 
 class Image
 {

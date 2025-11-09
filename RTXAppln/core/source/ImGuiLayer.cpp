@@ -1,9 +1,9 @@
-
 #include "ImGuiLayer.h"
 #include "Logger.h"
+#include "Constants.h"
 
 ImGuiLayer::ImGuiLayer (std::shared_ptr<Image> image) :
-    m_ViewportWidth (960), m_ViewportHeight (560), m_Image (std::move (image))
+    m_ViewportWidth (VIEWPORT_WIDTH), m_ViewportHeight (VIEWPORT_HEIGHT), m_Image (std::move (image))
 {
 }
 
@@ -54,7 +54,7 @@ void ImGuiLayer::OnUpdate (double ts) { }
 
 void ImGuiLayer::OnRender ()
 {
-    ImGui::SetNextWindowSize (ImVec2 (320, 560));
+    ImGui::SetNextWindowSize (ImVec2 (320, VIEWPORT_HEIGHT));
     ImGui::Begin ("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::NewLine ();
     ImGui::Text ("Last render: %.3f ms", 5.2556f);
@@ -75,7 +75,7 @@ void ImGuiLayer::OnRender ()
     if (m_Image && m_Image->GetSRV ())
     {
         ImGui::Image (
-                (void *) m_Image->GetSRV (), ImVec2 ((float) m_Image->GetWidth (), (float) m_Image->GetHeight ()));
+                (void *) m_Image->GetSRV (), ImVec2 ((float) IMAGE_WIDTH, (float) IMAGE_HEIGHT));
     }
 
     ImGui::End ();

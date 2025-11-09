@@ -9,6 +9,7 @@
 #include "../core/source/CommandQueue.h"
 #include "Image.h"
 #include "Layer.h"
+#include "../core/source/Constants.h"
 
 class AppLayer : public Layer
 {
@@ -21,7 +22,6 @@ public:
     virtual void OnAttach () override;
 
     // Generate a test pattern into the provided image (target may be front or back buffer)
-    // Use a non-owning reference to avoid shared_ptr refcount overhead in tight loops.
     void GenerateTestPattern (Image &target);
     static uint32_t PackColor (double r, double g, double b, double a = 1.0);
 

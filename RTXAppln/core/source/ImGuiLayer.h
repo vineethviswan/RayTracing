@@ -4,9 +4,10 @@
 #include <imgui.h>
 #include <memory>
 #include "Image.h"
+#include "Constants.h"
 
-#include "Layer.h"
 #include "Renderer.h"
+#include "Layer.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 
@@ -33,6 +34,6 @@ public:
 private:
     std::shared_ptr<Image> m_Image = nullptr;
     std::function<void ()> m_EnqueueRender;
-    uint32_t m_ViewportWidth = 0;
-    uint32_t m_ViewportHeight = 0;
+    uint32_t m_ViewportWidth = VIEWPORT_WIDTH;
+    uint32_t m_ViewportHeight = VIEWPORT_HEIGHT;
 };

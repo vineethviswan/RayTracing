@@ -3,6 +3,7 @@
 
 #include "Logger.h"
 #include "Window.h"
+#include "Constants.h"
 
 LRESULT WINAPI WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 

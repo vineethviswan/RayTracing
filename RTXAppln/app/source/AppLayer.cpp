@@ -1,6 +1,7 @@
 #include "AppLayer.h"
 #include "Application.h"
 #include "Logger.h"
+#include "Constants.h"
 
 #include <algorithm>
 #include <chrono>
@@ -13,12 +14,12 @@ AppLayer::AppLayer (std::shared_ptr<Image> image)
     if (image)
     {
         m_FrontImage = image;
-        m_BackImage = std::make_shared<Image> (m_FrontImage->GetWidth (), m_FrontImage->GetHeight ());
+        m_BackImage = std::make_shared<Image> (IMAGE_WIDTH, IMAGE_HEIGHT);
     }
     else
     {
-        m_FrontImage = std::make_shared<Image> (960, 559);
-        m_BackImage = std::make_shared<Image> (960, 559);
+        m_FrontImage = std::make_shared<Image> (IMAGE_WIDTH, IMAGE_HEIGHT);
+        m_BackImage = std::make_shared<Image> (IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
     // start worker

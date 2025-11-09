@@ -169,6 +169,7 @@
     <ClInclude Include="app\source\AppLayer.h" />
     <ClInclude Include="core\source\Application.h" />
     <ClInclude Include="core\source\CommandQueue.h" />
+    <ClInclude Include="core\source\Constants.h" />
     <ClInclude Include="core\source\Image.h" />
     <ClInclude Include="core\source\ImGuiLayer.h" />
     <ClInclude Include="core\source\Layer.h" />
