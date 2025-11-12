@@ -108,25 +108,29 @@ void AppLayer::EnqueueRenderJob ()
     Logger::Log(Logger::Level::INFO, "AppLayer: enqueueing render job");
     m_CommandQueue.Push([this]()
     {
+        auto start = std::chrono::high_resolution_clock::now();
+
         if (m_BackImage)
         {
-            // First time: no image showing yet, generate directly into front buffer
             if (!m_FrontImage->GetSRV())
             {
                 Logger::Log(Logger::Level::INFO, "First render - generating into front buffer");
                 GenerateTestPattern(*m_FrontImage);
                 m_FrontImage->UpdateGPUTexture(Application::Get().GetRenderer().GetDevice(),
                                                Application::Get().GetRenderer().GetDeviceContext());
-                m_BackReady.store(false, std::memory_order_release);  // Don't swap
+                m_BackReady.store(false, std::memory_order_release);
             }
             else
             {
-                // Normal case: generate into back buffer for swap
                 Logger::Log(Logger::Level::INFO, "Generating into back buffer");
                 GenerateTestPattern(*m_BackImage);
-                m_BackReady.store(true, std::memory_order_release);  // Signal for swap
+                m_BackReady.store(true, std::memory_order_release);
             }
         }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        double ms = std::chrono::duration<double, std::milli>(end - start).count();
+        m_LastRenderTimeMs.store(ms, std::memory_order_release);
     });
 }
 

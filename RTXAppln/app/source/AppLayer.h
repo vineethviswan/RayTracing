@@ -28,6 +28,8 @@ public:
     // Enqueue a heavy render job (called from UI thread)
     void EnqueueRenderJob ();
 
+    double GetLastRenderTimeMs() const { return m_LastRenderTimeMs.load(std::memory_order_acquire); }
+
 private:
     // Double-buffering: front used for GPU upload/display, back used by worker
     std::shared_ptr<Image> m_FrontImage;
@@ -39,4 +41,5 @@ private:
     CommandQueue m_CommandQueue;
     std::thread m_Worker;
     std::atomic<bool> m_WorkerRunning {false};
+    std::atomic<double> m_LastRenderTimeMs {0.0};
 };

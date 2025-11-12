@@ -22,8 +22,10 @@ public:
     void BeginFrame ();
     void EndFrame ();
     void ProcessEvent (UINT msg, WPARAM wParam, LPARAM lParam);
+
     // Enqueue a render job (UI -> producer). This should be a lightweight call.
     void SetEnqueueRenderCallback (std::function<void ()> cb) { m_EnqueueRender = std::move (cb); }
+    std::function<double ()> m_GetLastRenderTime;
 
     void OnUpdate (double ts) override;
     void OnRender () override;

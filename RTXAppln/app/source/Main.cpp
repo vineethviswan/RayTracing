@@ -35,6 +35,8 @@ int main ()
     imguiPtr->SetEnqueueRenderCallback ([appPtr]() {
         appPtr->EnqueueRenderJob ();
     });
+    imguiPtr->m_GetLastRenderTime = [appPtr]() {
+        return appPtr->GetLastRenderTimeMs(); };
 
     app.PushLayer (std::move (imguiLayerUP));
     app.PushLayer (std::move (appLayerUP));

@@ -57,7 +57,7 @@ void ImGuiLayer::OnRender ()
     ImGui::SetNextWindowSize (ImVec2 (320, VIEWPORT_HEIGHT));
     ImGui::Begin ("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::NewLine ();
-    ImGui::Text ("Last render: %.3f ms", 5.2556f);
+    ImGui::Text ("Last render: %.3f ms", m_GetLastRenderTime ? m_GetLastRenderTime() : 0.0);
     ImGui::Separator ();
     if (ImGui::Button ("Render"))
     {
