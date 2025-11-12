@@ -68,16 +68,16 @@ void ImGuiLayer::OnRender ()
     }
     ImGui::End ();
 
-    ImGui::SetNextWindowSize (ImVec2 (m_ViewportWidth, m_ViewportHeight));
-    ImGui::PushStyleVar (ImGuiStyleVar_WindowPadding, ImVec2 (0.0f, 0.0f));
-    ImGui::Begin ("Viewport", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::SetNextWindowSize(ImVec2(m_ViewportWidth, m_ViewportHeight));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("Viewport", nullptr,
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-    if (m_Image && m_Image->GetSRV ())
+    if (m_Image && m_Image->GetSRV())
     {
-        ImGui::Image (
-                (void *) m_Image->GetSRV (), ImVec2 ((float) IMAGE_WIDTH, (float) IMAGE_HEIGHT));
+        ImGui::Image((void*)m_Image->GetSRV(), ImVec2((float)IMAGE_WIDTH, (float)IMAGE_HEIGHT));
     }
 
-    ImGui::End ();
+    ImGui::End();
     ImGui::PopStyleVar ();
 }
