@@ -106,26 +106,39 @@ void AppLayer::OnRender ()
 void AppLayer::EnqueueRenderJob ()
 {
     Logger::Log(Logger::Level::INFO, "AppLayer: enqueueing render job");
+    auto &renderer = Application::Get().GetRenderer();
+
+    // If front image has no GPU resource yet, generate & upload synchronously
+    // on the calling thread (which is the UI / render thread). This ensures
+    // the first button press immediately shows an image without doing GPU
+    // work on the worker thread.
+    if (m_FrontImage && !m_FrontImage->GetSRV())
+    {
+        Logger::Log(Logger::Level::INFO, "First render (sync) - generating into front buffer");
+        auto start = std::chrono::high_resolution_clock::now();
+
+        GenerateTestPattern(*m_FrontImage);
+        m_FrontImage->UpdateGPUTexture(renderer.GetDevice(), renderer.GetDeviceContext());
+        m_BackReady.store(false, std::memory_order_release);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        double ms = std::chrono::duration<double, std::milli>(end - start).count();
+        m_LastRenderTimeMs.store(ms, std::memory_order_release);
+        return;
+    }
+
+    // Normal: schedule heavy work on background worker into back buffer
     m_CommandQueue.Push([this]()
     {
         auto start = std::chrono::high_resolution_clock::now();
 
         if (m_BackImage)
         {
-            if (!m_FrontImage->GetSRV())
-            {
-                Logger::Log(Logger::Level::INFO, "First render - generating into front buffer");
-                GenerateTestPattern(*m_FrontImage);
-                m_FrontImage->UpdateGPUTexture(Application::Get().GetRenderer().GetDevice(),
-                                               Application::Get().GetRenderer().GetDeviceContext());
-                m_BackReady.store(false, std::memory_order_release);
-            }
-            else
-            {
-                Logger::Log(Logger::Level::INFO, "Generating into back buffer");
-                GenerateTestPattern(*m_BackImage);
-                m_BackReady.store(true, std::memory_order_release);
-            }
+            Logger::Log(Logger::Level::INFO, "Generating into back buffer");
+            GenerateTestPattern(*m_BackImage);
+
+            // publish completed back buffer to render thread
+            m_BackReady.store(true, std::memory_order_release);
         }
 
         auto end = std::chrono::high_resolution_clock::now();
