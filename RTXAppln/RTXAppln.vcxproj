@@ -175,6 +175,7 @@
     <ClInclude Include="core\source\ImGuiLayer.h" />
     <ClInclude Include="core\source\Layer.h" />
     <ClInclude Include="core\source\Logger.h" />
+    <ClInclude Include="core\source\Ray.h" />
     <ClInclude Include="core\source\Renderer.h" />
     <ClInclude Include="core\source\Utility.h" />
     <ClInclude Include="core\source\Vector3.h" />
