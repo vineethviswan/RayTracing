@@ -22,6 +22,11 @@ AppLayer::AppLayer (std::shared_ptr<Image> image)
         m_BackImage = std::make_shared<Image> (IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
+    // create camera using image dimensions
+    uint32_t w = m_FrontImage->GetWidth ();
+    uint32_t h = m_FrontImage->GetHeight ();
+    m_Camera = std::make_unique<Camera> (w, h);   
+
     // start worker
     m_WorkerRunning = true;
     m_Worker = std::thread (
@@ -61,6 +66,32 @@ uint32_t AppLayer::PackColor (double r, double g, double b, double a)
     uint8_t B = static_cast<uint8_t> (std::clamp (b, 0.0, 1.0) * 255.0);
     uint8_t A = static_cast<uint8_t> (std::clamp (a, 0.0, 1.0) * 255.0);
     return (A << 24) | (B << 16) | (G << 8) | R;
+}
+
+void AppLayer::RayTracer (Image &target) 
+{ 
+    // If camera is not available, fall back to test pattern
+    if (!m_Camera)
+    {
+        GenerateTestPattern (target);
+        return;
+    }
+
+    const uint32_t width = target.GetWidth ();
+    const uint32_t height = target.GetHeight ();
+
+    for (uint32_t y = 0; y < height; ++y)
+    {
+        for (uint32_t x = 0; x < width; ++x)
+        {
+            // get ray for this pixel from camera
+            auto r = m_Camera->GetRay (x, y);
+            auto color = m_Camera->RayColor (r);
+
+            auto packed = PackColor (color.GetX (), color.GetY (), color.GetZ (), 1.0);
+            target.SetPixel (x, y, packed);
+        }
+    }
 }
 
 void AppLayer::GenerateTestPattern (Image &target)
@@ -117,7 +148,7 @@ void AppLayer::EnqueueRenderJob ()
         Logger::Log(Logger::Level::INFO, "First render (sync) - generating into front buffer");
         auto start = std::chrono::high_resolution_clock::now();
 
-        GenerateTestPattern(*m_FrontImage);
+        RayTracer (*m_FrontImage);
         m_FrontImage->UpdateGPUTexture(renderer.GetDevice(), renderer.GetDeviceContext());
         m_BackReady.store(false, std::memory_order_release);
 
@@ -135,7 +166,7 @@ void AppLayer::EnqueueRenderJob ()
         if (m_BackImage)
         {
             Logger::Log(Logger::Level::INFO, "Generating into back buffer");
-            GenerateTestPattern(*m_BackImage);
+            RayTracer (*m_BackImage);
 
             // publish completed back buffer to render thread
             m_BackReady.store(true, std::memory_order_release);

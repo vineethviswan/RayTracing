@@ -153,6 +153,7 @@
     <ClCompile Include="app\source\AppLayer.cpp" />
     <ClCompile Include="app\source\Main.cpp" />
     <ClCompile Include="core\source\Application.cpp" />
+    <ClCompile Include="core\source\Camera.cpp" />
     <ClCompile Include="core\source\Image.cpp" />
     <ClCompile Include="core\source\ImGuiLayer.cpp" />
     <ClCompile Include="core\source\Renderer.cpp" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="app\source\AppLayer.h" />
     <ClInclude Include="core\source\Application.h" />
+    <ClInclude Include="core\source\Camera.h" />
     <ClInclude Include="core\source\CommandQueue.h" />
     <ClInclude Include="core\source\Constants.h" />
     <ClInclude Include="core\source\Image.h" />

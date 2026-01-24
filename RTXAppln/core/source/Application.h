@@ -38,5 +38,5 @@ private:
     Renderer m_Renderer;
     ImGuiLayer *m_ImGuiLayer;
 
-    std::vector<std::unique_ptr<Layer>> m_LayerStack;
+    std::vector<std::unique_ptr<Layer>> m_LayerStack;    
 };
