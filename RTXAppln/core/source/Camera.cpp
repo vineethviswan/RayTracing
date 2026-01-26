@@ -40,10 +40,15 @@ Ray Camera::GetRay (uint32_t i, uint32_t j) const
     return r;
 }
 
-Color Camera::RayColor (const Ray& r)
+Color Camera::RayColor (const Ray &r, const Hittable &world)
 {
-    Vector3 unit_direction = UnitVector(r.direction ());
-    auto a = 0.5 * (unit_direction.GetY () + 1.0);
+    HitRecord rec;
+    if (world.Hit (r, 0, INFINITY, rec))
+    {
+        return 0.5 * (rec.normal + Color (1, 1, 1));
+    }
 
+    Vector3 unit_direction = UnitVector (r.direction ());
+    auto a = 0.5 * (unit_direction.GetY () + 1.0);
     return (1.0 - a) * Color (1.0, 1.0, 1.0) + a * Color (0.5, 0.7, 1.0);
 }

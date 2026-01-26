@@ -173,12 +173,15 @@
     <ClInclude Include="core\source\Camera.h" />
     <ClInclude Include="core\source\CommandQueue.h" />
     <ClInclude Include="core\source\Constants.h" />
+    <ClInclude Include="core\source\Hittable.h" />
+    <ClInclude Include="core\source\HittableList.h" />
     <ClInclude Include="core\source\Image.h" />
     <ClInclude Include="core\source\ImGuiLayer.h" />
     <ClInclude Include="core\source\Layer.h" />
     <ClInclude Include="core\source\Logger.h" />
     <ClInclude Include="core\source\Ray.h" />
     <ClInclude Include="core\source\Renderer.h" />
+    <ClInclude Include="core\source\Sphere.h" />
     <ClInclude Include="core\source\Utility.h" />
     <ClInclude Include="core\source\Vector3.h" />
     <ClInclude Include="core\source\Window.h" />

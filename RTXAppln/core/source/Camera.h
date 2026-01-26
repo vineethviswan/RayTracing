@@ -6,6 +6,7 @@
 #include "Ray.h"
 #include "Vector3.h"
 #include "Utility.h"
+#include "Hittable.h"
 
 class Camera
 {
@@ -15,7 +16,9 @@ public:
     void Initialize ();
 
     Ray GetRay (uint32_t i, uint32_t j) const;
-    Color RayColor (const Ray &r);
+
+    // RayColor now takes a scene (Hittable) so it can shade hits against the world.
+    Color RayColor (const Ray &r, const Hittable &world);
 
 private:
     uint32_t m_Width;

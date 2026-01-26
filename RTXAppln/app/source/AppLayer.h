@@ -6,11 +6,12 @@
 #include <mutex>
 #include <thread>
 
-#include "../core/source/CommandQueue.h"
+#include "CommandQueue.h"
 #include "Image.h"
 #include "Layer.h"
-#include "../core/source/Constants.h"
-#include "../core/source/Camera.h"
+#include "Constants.h"
+#include "Camera.h"
+#include "HittableList.h"
 
 class AppLayer : public Layer
 {
@@ -44,6 +45,9 @@ private:
 
     std::atomic<bool> m_BackReady {false};
     std::mutex m_SwapMutex;
+
+    // Scene (world) holding hittable objects
+    HittableList m_World;
 
     CommandQueue m_CommandQueue;
     std::thread m_Worker;

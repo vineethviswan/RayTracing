@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "Logger.h"
 #include "Constants.h"
+#include "../core/source/HittableList.h"
+#include "../core/source/Sphere.h"
 
 #include <algorithm>
 #include <chrono>
@@ -25,7 +27,11 @@ AppLayer::AppLayer (std::shared_ptr<Image> image)
     // create camera using image dimensions
     uint32_t w = m_FrontImage->GetWidth ();
     uint32_t h = m_FrontImage->GetHeight ();
-    m_Camera = std::make_unique<Camera> (w, h);   
+    m_Camera = std::make_unique<Camera> (w, h);
+
+    // create scene with two spheres
+    m_World.add (make_shared<sphere> (Point3 (0, 0, -1), 0.5));
+    m_World.add (make_shared<sphere> (Point3 (0, -100.5, -1), 100));
 
     // start worker
     m_WorkerRunning = true;
@@ -86,7 +92,7 @@ void AppLayer::RayTracer (Image &target)
         {
             // get ray for this pixel from camera
             auto r = m_Camera->GetRay (x, y);
-            auto color = m_Camera->RayColor (r);
+            auto color = m_Camera->RayColor (r, m_World);
 
             auto packed = PackColor (color.GetX (), color.GetY (), color.GetZ (), 1.0);
             target.SetPixel (x, y, packed);
