@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef CONSTANTS
+#define CONSTANTS
+
 constexpr uint32_t WINDOW_WIDTH  = 1309;
 constexpr uint32_t WINDOW_HEIGHT = 605;
 
@@ -15,3 +18,7 @@ constexpr uint32_t VIEWPORT_HEIGHT = IMAGE_HEIGHT; // Use IMAGE_HEIGHT for ImGui
 constexpr double ASPECT_RATIO = 16.0 / 9.0;
 
 constexpr int CHANNELS = 4;
+
+const double INFNTY = std::numeric_limits<double>::infinity ();
+
+#endif // !CONSTANTS

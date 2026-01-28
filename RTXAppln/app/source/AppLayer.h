@@ -9,7 +9,6 @@
 #include "CommandQueue.h"
 #include "Image.h"
 #include "Layer.h"
-#include "Constants.h"
 #include "Camera.h"
 #include "HittableList.h"
 

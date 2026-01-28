@@ -143,6 +143,9 @@
     <ClInclude Include="core\source\HittableList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core\source\Interval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

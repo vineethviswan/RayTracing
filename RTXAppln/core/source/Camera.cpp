@@ -43,7 +43,7 @@ Ray Camera::GetRay (uint32_t i, uint32_t j) const
 Color Camera::RayColor (const Ray &r, const Hittable &world)
 {
     HitRecord rec;
-    if (world.Hit (r, 0, INFINITY, rec))
+    if (world.Hit (r, Interval (0, INFNTY), rec))
     {
         return 0.5 * (rec.normal + Color (1, 1, 1));
     }

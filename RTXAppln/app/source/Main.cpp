@@ -10,7 +10,6 @@
 #include "Logger.h"
 #include "ImGuiLayer.h"
 #include "Image.h"
-#include "Constants.h"
 #include <memory>
 
 int main ()
