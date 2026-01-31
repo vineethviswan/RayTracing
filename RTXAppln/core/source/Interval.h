@@ -20,11 +20,7 @@ public:
     bool Contains (double x) const { return Min <= x && x <= Max; }
 
     bool Surrounds (double x) const { return Min < x && x < Max; }
-
-    //static const Interval EMPTY, UNIVERSE;
+    
 };
-
-//const Interval Interval::EMPTY = Interval (+INFNTY, -INFNTY);
-//const Interval Interval::UNIVERSE = Interval (-INFNTY, +INFNTY);
 
 #endif

@@ -20,20 +20,28 @@ public:
     // RayColor now takes a scene (Hittable) so it can shade hits against the world.
     Color RayColor (const Ray &r, const Hittable &world);
 
+    int GetSamplesPerPixel () const { return samples_per_pixel; }
+    double GetPixelSamplesScale () const { return pixel_samples_scale; }
+
+    Vector3 SampleSquare () const;    
+
 private:
     uint32_t m_Width;
     uint32_t m_Height;
+
     Point3 camera_center; // Camera center
     Point3 pixel00_loc; // Location of pixel 0, 0
-    Vector3 pixel_delta_u; // Offset to pixel to the right
-    Vector3 pixel_delta_v; // Offset to pixel below
     Point3 lookfrom = Point3 (0, 0, 0); // Point camera is looking from
-
     Point3 lookat = Point3 (0, 0, -1); // Point camera is looking at
+
+    Vector3 pixel_delta_u; // Offset to pixel to the right
+    Vector3 pixel_delta_v; // Offset to pixel below    
     Vector3 vup; // Camera-relative "up" direction
-    Vector3 u;
-    Vector3 v;
+    Vector3 u, v;    
     Vector3 w; // Camera frame basis vectors
+
+    int samples_per_pixel = 10; // Count of random samples for each pixel
+    double pixel_samples_scale; // Color scale factor for a sum of pixel samples
 };
 
 #endif // CAMERA_H

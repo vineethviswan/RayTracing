@@ -67,10 +67,11 @@ void AppLayer::OnAttach ()
 // Utility function to pack r, g, b, a (all in [0,1]) into a uint32_t RGBA value
 uint32_t AppLayer::PackColor (double r, double g, double b, double a)
 {
-    uint8_t R = static_cast<uint8_t> (std::clamp (r, 0.0, 1.0) * 255.0);
-    uint8_t G = static_cast<uint8_t> (std::clamp (g, 0.0, 1.0) * 255.0);
-    uint8_t B = static_cast<uint8_t> (std::clamp (b, 0.0, 1.0) * 255.0);
-    uint8_t A = static_cast<uint8_t> (std::clamp (a, 0.0, 1.0) * 255.0);
+    uint8_t R = static_cast<uint8_t> (std::clamp (r, 0.0, 0.999) * 256.0);
+    uint8_t G = static_cast<uint8_t> (std::clamp (g, 0.0, 0.999) * 256.0);
+    uint8_t B = static_cast<uint8_t> (std::clamp (b, 0.0, 0.999) * 256.0);
+    uint8_t A = static_cast<uint8_t> (std::clamp (a, 0.0, 0.999) * 256.0);
+
     return (A << 24) | (B << 16) | (G << 8) | R;
 }
 
@@ -90,10 +91,15 @@ void AppLayer::RayTracer (Image &target)
     {
         for (uint32_t x = 0; x < width; ++x)
         {
-            // get ray for this pixel from camera
-            auto r = m_Camera->GetRay (x, y);
-            auto color = m_Camera->RayColor (r, m_World);
-
+            Color color (0, 0, 0);
+            for (int sample = 0; sample < m_Camera->GetSamplesPerPixel(); sample++)
+            {
+                // get ray for this pixel from camera
+                Ray r = m_Camera->GetRay (x, y);
+                color += m_Camera->RayColor (r, m_World);
+            }
+            
+            color *= m_Camera->GetPixelSamplesScale ();
             auto packed = PackColor (color.GetX (), color.GetY (), color.GetZ (), 1.0);
             target.SetPixel (x, y, packed);
         }

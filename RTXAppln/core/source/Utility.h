@@ -19,19 +19,14 @@ inline double DegreesToRadian (double degrees) { return degrees * PI / 180.0; }
 inline double RandomDouble ()
 {
     // returns a random double value [0,1)
-    /*std::uniform_real_distribution<double> distr(0.0, 1.0);
+    std::uniform_real_distribution<double> distr(0.0, 1.0);
     std::mt19937 generator;
-    return distr(generator);*/
-
-    return rand () / (RAND_MAX + 1.0);
+    return distr(generator);    
 }
 
 inline double RandomDouble (double min, double max)
 {
     // returns a random double value [0,1)
-    /*std::uniform_real_distribution<double> distr(min, max);
-    std::mt19937 generator;
-    return distr(generator);*/
     return min + (max - min) * RandomDouble ();
 }
 
