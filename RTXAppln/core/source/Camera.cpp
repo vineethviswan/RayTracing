@@ -1,5 +1,6 @@
 
 #include "Camera.h"
+#include "Hittable.h"
 #include <cmath>
 
 Camera::Camera (uint32_t &width, uint32_t &height) 
@@ -22,7 +23,9 @@ void Camera::Initialize ()
     auto viewport_u = Vector3 (viewport_width, 0, 0);
     auto viewport_v = Vector3 (0, -viewport_height, 0);
 
+    samples_per_pixel = 10;
     pixel_samples_scale = 1.0 / samples_per_pixel;
+    max_depth = 50;
 
 	// Calculate the horizontal and vertical delta vectors from pixel to pixel.
     pixel_delta_u = viewport_u / m_Width;
@@ -47,12 +50,17 @@ Ray Camera::GetRay (uint32_t i, uint32_t j) const
     return Ray (ray_origin, ray_direction);        
 }
 
-Color Camera::RayColor (const Ray &r, const Hittable &world)
+Color Camera::RayColor (const Ray &r, int depth, const Hittable &world)
 {
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if (depth <= 0)
+        return Color (0, 0, 0);
+
     HitRecord rec;
-    if (world.Hit (r, Interval (0, INFNTY), rec))
-    {
-        return 0.5 * (rec.normal + Color (1, 1, 1));
+    if (world.Hit (r, Interval (0.001, INFNTY), rec))
+    {       
+        Vector3 direction = rec.normal + RandomUnitVector();
+        return 0.1 * RayColor (Ray (rec.p, direction), depth - 1, world);                
     }
 
     Vector3 unit_direction = UnitVector (r.direction ());

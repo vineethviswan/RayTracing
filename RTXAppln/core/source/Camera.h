@@ -18,10 +18,11 @@ public:
     Ray GetRay (uint32_t i, uint32_t j) const;
 
     // RayColor now takes a scene (Hittable) so it can shade hits against the world.
-    Color RayColor (const Ray &r, const Hittable &world);
+    Color RayColor (const Ray &r, int depth, const Hittable &world);
 
     int GetSamplesPerPixel () const { return samples_per_pixel; }
     double GetPixelSamplesScale () const { return pixel_samples_scale; }
+    int GetMaxDepth () const { return max_depth; }
 
     Vector3 SampleSquare () const;    
 
@@ -40,8 +41,9 @@ private:
     Vector3 u, v;    
     Vector3 w; // Camera frame basis vectors
 
-    int samples_per_pixel = 10; // Count of random samples for each pixel
+    int samples_per_pixel; // Count of random samples for each pixel
     double pixel_samples_scale; // Color scale factor for a sum of pixel samples
+    int max_depth; // Maximum number of ray bounces into scene
 };
 
 #endif // CAMERA_H

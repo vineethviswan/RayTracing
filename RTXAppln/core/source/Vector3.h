@@ -104,7 +104,16 @@ inline Vector3 Vector3::RandomVector (double min, double max)
     return Vector3 (RandomDouble (min, max), RandomDouble (min, max), RandomDouble (min, max));
 }
 
-inline Vector3 RandomUnitVector () { return UnitVector (RandomInUnitSphere ()); }
+inline Vector3 RandomUnitVector ()
+{
+    while (true)
+    {
+        auto p = Vector3::RandomVector (-1, 1);
+        auto lensq = p.LengthSquared ();
+        if (1e-160 < lensq && lensq <= 1)
+            return p / sqrt (lensq);
+    }
+}
 
 inline Vector3 RandomOnHemisphere (const Vector3 &normal)
 {
