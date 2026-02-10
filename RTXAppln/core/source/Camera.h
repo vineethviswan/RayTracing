@@ -7,6 +7,7 @@
 #include "Vector3.h"
 #include "Utility.h"
 #include "Hittable.h"
+#include "Material.h"
 
 class Camera
 {

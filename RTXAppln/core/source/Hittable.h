@@ -6,6 +6,8 @@
 #include "Ray.h"
 #include "Interval.h"
 
+class Material;
+
 class HitRecord
 {
 public:
@@ -13,6 +15,7 @@ public:
     Vector3 normal;
     double t;
     bool front_face;
+    std::shared_ptr<Material> mat;
 
     void SetFaceNormal (const Ray &r, const Vector3 &outward_normal)
     {

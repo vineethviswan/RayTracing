@@ -59,8 +59,14 @@ Color Camera::RayColor (const Ray &r, int depth, const Hittable &world)
     HitRecord rec;
     if (world.Hit (r, Interval (0.001, INFNTY), rec))
     {       
-        Vector3 direction = rec.normal + RandomUnitVector();
-        return 0.1 * RayColor (Ray (rec.p, direction), depth - 1, world);                
+        /*Vector3 direction = rec.normal + RandomUnitVector();
+        return 0.1 * RayColor (Ray (rec.p, direction), depth - 1, world); */               
+
+        Ray scattered;
+        Color attenuation;
+        if (rec.mat->Scatter (r, rec, attenuation, scattered))
+            return attenuation * RayColor (scattered, depth - 1, world);
+        return Color (0, 0, 0);
     }
 
     Vector3 unit_direction = UnitVector (r.direction ());

@@ -180,6 +180,7 @@
     <ClInclude Include="core\source\Interval.h" />
     <ClInclude Include="core\source\Layer.h" />
     <ClInclude Include="core\source\Logger.h" />
+    <ClInclude Include="core\source\Material.h" />
     <ClInclude Include="core\source\Ray.h" />
     <ClInclude Include="core\source\Renderer.h" />
     <ClInclude Include="core\source\Sphere.h" />

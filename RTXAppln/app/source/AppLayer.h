@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "Camera.h"
 #include "HittableList.h"
+#include "Material.h"
 
 class AppLayer : public Layer
 {
