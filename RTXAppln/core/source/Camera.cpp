@@ -11,17 +11,26 @@ Camera::Camera (uint32_t &width, uint32_t &height)
 
 void Camera::Initialize ()
 { 
-	lookfrom = Point3 (0, 0, 0);
-    lookat = Point3 (0, 0, 0);
-    camera_center = Point3 (0, 0, 0);
+	lookfrom = Point3 (-2, 2, 1);
+    lookat = Point3 (0, 0, -1);
+    camera_center = lookfrom;
+    vfov = 20; // Vertical view angle (field of view)
+    vup = Vector3 (0, 1, 0); // Camera-relative "up" direction
     
-    double focal_length = 1.0; 
-	auto viewport_height = 2.0;
+    double focal_length = (lookfrom - lookat).Length (); 
+	auto theta = DegreesToRadian (vfov);
+    auto h = std::tan (theta / 2);
+    auto viewport_height = 2 * h * focal_length;
     auto viewport_width = viewport_height * (static_cast<double> (m_Width) / m_Height);
 
+    // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    w = UnitVector (lookfrom - lookat);
+    u = UnitVector (Cross (vup, w));
+    v = Cross (w, u);
+
 	// Calculate the vectors across the horizontal and down the vertical viewport edges.
-    auto viewport_u = Vector3 (viewport_width, 0, 0);
-    auto viewport_v = Vector3 (0, -viewport_height, 0);
+    auto viewport_u = viewport_width * u; // Vector across viewport horizontal edge
+    auto viewport_v = viewport_height * (v * -1); // Vector down viewport vertical edge
 
     samples_per_pixel = 10;
     pixel_samples_scale = 1.0 / samples_per_pixel;
@@ -32,7 +41,7 @@ void Camera::Initialize ()
     pixel_delta_v = viewport_v / m_Height;
 
 	// Calculate the location of the upper left pixel.
-    auto viewport_upper_left = camera_center - Vector3 (0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+    auto viewport_upper_left = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 

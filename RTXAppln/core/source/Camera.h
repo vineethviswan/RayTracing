@@ -39,12 +39,13 @@ private:
     Vector3 pixel_delta_u; // Offset to pixel to the right
     Vector3 pixel_delta_v; // Offset to pixel below    
     Vector3 vup; // Camera-relative "up" direction
-    Vector3 u, v;    
-    Vector3 w; // Camera frame basis vectors
+    Vector3 u, v, w; // Camera frame basis vectors
 
     int samples_per_pixel; // Count of random samples for each pixel
     double pixel_samples_scale; // Color scale factor for a sum of pixel samples
     int max_depth; // Maximum number of ray bounces into scene
+
+    double vfov; // Vertical view angle (field of view)
 };
 
 #endif // CAMERA_H
