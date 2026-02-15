@@ -25,7 +25,8 @@ public:
     double GetPixelSamplesScale () const { return pixel_samples_scale; }
     int GetMaxDepth () const { return max_depth; }
 
-    Vector3 SampleSquare () const;    
+    Vector3 SampleSquare () const;
+    Point3 DefocusDiskSample () const;
 
 private:
     uint32_t m_Width;
@@ -46,6 +47,10 @@ private:
     int max_depth; // Maximum number of ray bounces into scene
 
     double vfov; // Vertical view angle (field of view)
+    double defocus_angle; // Variation angle of rays through each pixel
+    double focus_dist; // Distance from camera lookfrom point to plane of perfect focus
+    Vector3 defocus_disk_u; // Defocus disk horizontal radius
+    Vector3 defocus_disk_v; // Defocus disk vertical radius
 };
 
 #endif // CAMERA_H

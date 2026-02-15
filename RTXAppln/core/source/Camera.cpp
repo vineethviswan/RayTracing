@@ -14,13 +14,15 @@ void Camera::Initialize ()
 	lookfrom = Point3 (-2, 2, 1);
     lookat = Point3 (0, 0, -1);
     camera_center = lookfrom;
-    vfov = 20; // Vertical view angle (field of view)
-    vup = Vector3 (0, 1, 0); // Camera-relative "up" direction
+    vfov = 20; 
+    vup = Vector3 (0, 1, 0); 
+    defocus_angle = 10.0;
+    focus_dist = 3.4;
     
     double focal_length = (lookfrom - lookat).Length (); 
 	auto theta = DegreesToRadian (vfov);
     auto h = std::tan (theta / 2);
-    auto viewport_height = 2 * h * focal_length;
+    auto viewport_height = 2 * h * focus_dist;
     auto viewport_width = viewport_height * (static_cast<double> (m_Width) / m_Height);
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
@@ -41,19 +43,25 @@ void Camera::Initialize ()
     pixel_delta_v = viewport_v / m_Height;
 
 	// Calculate the location of the upper left pixel.
-    auto viewport_upper_left = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+    //auto viewport_upper_left = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+    auto viewport_upper_left = camera_center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+    // Calculate the camera defocus disk basis vectors.
+    auto defocus_radius = focus_dist * std::tan (DegreesToRadian (defocus_angle / 2));
+    defocus_disk_u = u * defocus_radius;
+    defocus_disk_v = v * defocus_radius;
 }
 
 Ray Camera::GetRay (uint32_t i, uint32_t j) const
 { 
-    // Construct a camera ray originating from the origin and directed at randomly sampled
-    // point around the pixel location i, j.
+    // Construct a camera ray originating from the defocus disk and directed at a randomly
+    // sampled point around the pixel location i, j.
 
     auto offset = SampleSquare ();
     auto pixel_sample = pixel00_loc + ((i + offset.GetX ()) * pixel_delta_u) + ((j + offset.GetY ()) * pixel_delta_v);
 
-    auto ray_origin = camera_center;
+    auto ray_origin = (defocus_angle <= 0) ? camera_center : DefocusDiskSample ();
     auto ray_direction = pixel_sample - ray_origin;
 
     return Ray (ray_origin, ray_direction);        
@@ -87,4 +95,11 @@ Vector3 Camera::SampleSquare () const
 {
     // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
     return Vector3 (RandomDouble () - 0.5, RandomDouble () - 0.5, 0);
+}
+
+Point3 Camera::DefocusDiskSample () const
+{
+    // Returns a random point in the camera defocus disk.
+    auto p = RandomInUnitDisk ();
+    return camera_center + (p.GetX() * defocus_disk_u) + (p.GetY() * defocus_disk_v);
 }
