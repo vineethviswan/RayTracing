@@ -3,8 +3,8 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "Ray.h"
 #include "Interval.h"
+#include "Ray.h"
 
 class Material;
 

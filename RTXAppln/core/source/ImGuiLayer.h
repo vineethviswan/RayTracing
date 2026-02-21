@@ -3,11 +3,11 @@
 #include <functional>
 #include <imgui.h>
 #include <memory>
-#include "Image.h"
 #include "Constants.h"
+#include "Image.h"
 
-#include "Renderer.h"
 #include "Layer.h"
+#include "Renderer.h"
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 

@@ -6,11 +6,11 @@
 #include <mutex>
 #include <thread>
 
+#include "Camera.h"
 #include "CommandQueue.h"
+#include "HittableList.h"
 #include "Image.h"
 #include "Layer.h"
-#include "Camera.h"
-#include "HittableList.h"
 #include "Material.h"
 
 class AppLayer : public Layer
@@ -34,7 +34,7 @@ public:
     // Enqueue a heavy render job (called from UI thread)
     void EnqueueRenderJob ();
 
-    double GetLastRenderTimeMs() const { return m_LastRenderTimeMs.load(std::memory_order_acquire); }
+    double GetLastRenderTimeMs () const { return m_LastRenderTimeMs.load (std::memory_order_acquire); }
 
 private:
     // Double-buffering: front used for GPU upload/display, back used by worker

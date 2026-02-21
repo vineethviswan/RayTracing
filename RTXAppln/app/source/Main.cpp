@@ -5,12 +5,12 @@
  * References : https://raytracing.github.io/books/RayTracingInOneWeekend.html
  * ---------------------------------------------------------------------------------*/
 
+#include <memory>
 #include "AppLayer.h"
 #include "Application.h"
-#include "Logger.h"
 #include "ImGuiLayer.h"
 #include "Image.h"
-#include <memory>
+#include "Logger.h"
 
 int main ()
 {
@@ -31,11 +31,8 @@ int main ()
 
     ImGuiLayer *imguiPtr = imguiLayerUP.get ();
     AppLayer *appPtr = appLayerUP.get ();
-    imguiPtr->SetEnqueueRenderCallback ([appPtr]() {
-        appPtr->EnqueueRenderJob ();
-    });
-    imguiPtr->m_GetLastRenderTime = [appPtr]() {
-        return appPtr->GetLastRenderTimeMs(); };
+    imguiPtr->SetEnqueueRenderCallback ([appPtr] () { appPtr->EnqueueRenderJob (); });
+    imguiPtr->m_GetLastRenderTime = [appPtr] () { return appPtr->GetLastRenderTimeMs (); };
 
     app.PushLayer (std::move (imguiLayerUP));
     app.PushLayer (std::move (appLayerUP));

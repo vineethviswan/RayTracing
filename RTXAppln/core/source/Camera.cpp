@@ -1,26 +1,22 @@
 
 #include "Camera.h"
-#include "Hittable.h"
 #include <cmath>
+#include "Hittable.h"
 
-Camera::Camera (uint32_t &width, uint32_t &height) 
-	: m_Width (width), m_Height (height)
-{ 	
-	Initialize (); 
-}
+Camera::Camera (uint32_t &width, uint32_t &height) : m_Width (width), m_Height (height) { Initialize (); }
 
 void Camera::Initialize ()
-{ 
-	lookfrom = Point3 (-2, 2, 1);
+{
+    lookfrom = Point3 (-2, 2, 1);
     lookat = Point3 (0, 0, -1);
     camera_center = lookfrom;
-    vfov = 20; 
-    vup = Vector3 (0, 1, 0); 
+    vfov = 20;
+    vup = Vector3 (0, 1, 0);
     defocus_angle = 10.0;
     focus_dist = 3.4;
-    
-    double focal_length = (lookfrom - lookat).Length (); 
-	auto theta = DegreesToRadian (vfov);
+
+    double focal_length = (lookfrom - lookat).Length ();
+    auto theta = DegreesToRadian (vfov);
     auto h = std::tan (theta / 2);
     auto viewport_height = 2 * h * focus_dist;
     auto viewport_width = viewport_height * (static_cast<double> (m_Width) / m_Height);
@@ -30,7 +26,7 @@ void Camera::Initialize ()
     u = UnitVector (Cross (vup, w));
     v = Cross (w, u);
 
-	// Calculate the vectors across the horizontal and down the vertical viewport edges.
+    // Calculate the vectors across the horizontal and down the vertical viewport edges.
     auto viewport_u = viewport_width * u; // Vector across viewport horizontal edge
     auto viewport_v = viewport_height * (v * -1); // Vector down viewport vertical edge
 
@@ -38,12 +34,12 @@ void Camera::Initialize ()
     pixel_samples_scale = 1.0 / samples_per_pixel;
     max_depth = 50;
 
-	// Calculate the horizontal and vertical delta vectors from pixel to pixel.
+    // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     pixel_delta_u = viewport_u / m_Width;
     pixel_delta_v = viewport_v / m_Height;
 
-	// Calculate the location of the upper left pixel.
-    //auto viewport_upper_left = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+    // Calculate the location of the upper left pixel.
+    // auto viewport_upper_left = camera_center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
     auto viewport_upper_left = camera_center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
@@ -54,7 +50,7 @@ void Camera::Initialize ()
 }
 
 Ray Camera::GetRay (uint32_t i, uint32_t j) const
-{ 
+{
     // Construct a camera ray originating from the defocus disk and directed at a randomly
     // sampled point around the pixel location i, j.
 
@@ -64,7 +60,7 @@ Ray Camera::GetRay (uint32_t i, uint32_t j) const
     auto ray_origin = (defocus_angle <= 0) ? camera_center : DefocusDiskSample ();
     auto ray_direction = pixel_sample - ray_origin;
 
-    return Ray (ray_origin, ray_direction);        
+    return Ray (ray_origin, ray_direction);
 }
 
 Color Camera::RayColor (const Ray &r, int depth, const Hittable &world)
@@ -75,9 +71,9 @@ Color Camera::RayColor (const Ray &r, int depth, const Hittable &world)
 
     HitRecord rec;
     if (world.Hit (r, Interval (0.001, INFNTY), rec))
-    {       
+    {
         /*Vector3 direction = rec.normal + RandomUnitVector();
-        return 0.1 * RayColor (Ray (rec.p, direction), depth - 1, world); */               
+        return 0.1 * RayColor (Ray (rec.p, direction), depth - 1, world); */
 
         Ray scattered;
         Color attenuation;
@@ -101,5 +97,5 @@ Point3 Camera::DefocusDiskSample () const
 {
     // Returns a random point in the camera defocus disk.
     auto p = RandomInUnitDisk ();
-    return camera_center + (p.GetX() * defocus_disk_u) + (p.GetY() * defocus_disk_v);
+    return camera_center + (p.GetX () * defocus_disk_u) + (p.GetY () * defocus_disk_v);
 }

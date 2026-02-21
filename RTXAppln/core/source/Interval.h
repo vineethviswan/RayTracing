@@ -20,7 +20,6 @@ public:
     bool Contains (double x) const { return Min <= x && x <= Max; }
 
     bool Surrounds (double x) const { return Min < x && x < Max; }
-    
 };
 
 #endif
