@@ -38,4 +38,10 @@ private:
     std::function<void ()> m_EnqueueRender;
     uint32_t m_ViewportWidth = VIEWPORT_WIDTH;
     uint32_t m_ViewportHeight = VIEWPORT_HEIGHT;
+
+    // Timer shown while waiting for m_GetLastRenderTime to become available.
+    // Accumulated in seconds from OnUpdate(ts).
+    double m_WaitingTimerSeconds = 0.0;
+    // True while waiting timer is active (optional flag for clarity).
+    bool m_WaitingTimerActive = true;
 };

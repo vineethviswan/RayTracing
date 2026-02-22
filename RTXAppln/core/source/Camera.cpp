@@ -7,13 +7,16 @@ Camera::Camera (uint32_t &width, uint32_t &height) : m_Width (width), m_Height (
 
 void Camera::Initialize ()
 {
-    lookfrom = Point3 (-2, 2, 1);
-    lookat = Point3 (0, 0, -1);
+    lookfrom = Point3 (13, 2, 3);
+    lookat = Point3 (0, 0, 0);
     camera_center = lookfrom;
     vfov = 20;
     vup = Vector3 (0, 1, 0);
-    defocus_angle = 10.0;
-    focus_dist = 3.4;
+    defocus_angle = 0.6;
+    focus_dist = 10.0;
+    samples_per_pixel = 100;
+    pixel_samples_scale = 1.0 / samples_per_pixel;
+    max_depth = 50;
 
     double focal_length = (lookfrom - lookat).Length ();
     auto theta = DegreesToRadian (vfov);
@@ -29,11 +32,7 @@ void Camera::Initialize ()
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
     auto viewport_u = viewport_width * u; // Vector across viewport horizontal edge
     auto viewport_v = viewport_height * (v * -1); // Vector down viewport vertical edge
-
-    samples_per_pixel = 10;
-    pixel_samples_scale = 1.0 / samples_per_pixel;
-    max_depth = 50;
-
+    
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     pixel_delta_u = viewport_u / m_Width;
     pixel_delta_v = viewport_v / m_Height;

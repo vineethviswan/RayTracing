@@ -28,18 +28,55 @@ AppLayer::AppLayer (std::shared_ptr<Image> image)
     uint32_t w = m_FrontImage->GetWidth ();
     uint32_t h = m_FrontImage->GetHeight ();
     m_Camera = std::make_unique<Camera> (w, h);
+   
+    auto ground_material = make_shared<Lambertian> (Color (0.5, 0.5, 0.5));
+    m_World.add (make_shared<sphere> (Point3 (0, -1000, 0), 1000, ground_material));
 
-    auto material_ground = make_shared<Lambertian> (Color (0.8, 0.8, 0.0));
-    auto material_center = make_shared<Lambertian> (Color (0.1, 0.2, 0.5));
-    auto material_left = make_shared<Dielectric> (1.50);
-    auto material_bubble = make_shared<Dielectric> (1.00 / 1.50);
-    auto material_right = make_shared<Metal> (Color (0.8, 0.6, 0.2));
+    for (int a = -4; a < 4; a++)
+    {
+        for (int b = -4; b < 4; b++)
+        {
+            auto choose_mat = RandomDouble ();
+            Point3 center (a + 0.9 * RandomDouble (), 0.2, b + 0.9 * RandomDouble ());
 
-    m_World.add (make_shared<sphere> (Point3 (0.0, -100.5, -1.0), 100.0, material_ground));
-    m_World.add (make_shared<sphere> (Point3 (0.0, 0.0, -1.2), 0.5, material_center));
-    m_World.add (make_shared<sphere> (Point3 (-1.0, 0.0, -1.0), 0.5, material_left));
-    m_World.add (make_shared<sphere> (Point3 (-1.0, 0.0, -1.0), 0.4, material_bubble));
-    m_World.add (make_shared<sphere> (Point3 (1.0, 0.0, -1.0), 0.5, material_right));
+            if ((center - Point3 (4, 0.2, 0)).Length () > 0.9)
+            {
+                shared_ptr<Material> sphere_material;
+
+                if (choose_mat < 0.8)
+                {
+                    // diffuse
+                    auto albedo = Color::RandomVector () * Color::RandomVector ();
+                    sphere_material = make_shared<Lambertian> (albedo);
+                    m_World.add (make_shared<sphere> (center, 0.2, sphere_material));
+                }
+                else if (choose_mat < 0.95)
+                {
+                    // metal
+                    auto albedo = Color::RandomVector (0.5, 1);
+                    auto fuzz = RandomDouble (0, 0.5);
+                    sphere_material = make_shared<Metal> (albedo, fuzz);
+                    m_World.add (make_shared<sphere> (center, 0.2, sphere_material));
+                }
+                else
+                {
+                    // glass
+                    sphere_material = make_shared<Dielectric> (1.5);
+                    m_World.add (make_shared<sphere> (center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = make_shared<Dielectric> (1.5);
+    m_World.add (make_shared<sphere> (Point3 (0, 1, 0), 1.0, material1));
+
+    auto material2 = make_shared<Lambertian> (Color (0.4, 0.2, 0.1));
+    m_World.add (make_shared<sphere> (Point3 (-4, 1, 0), 1.0, material2));
+
+    auto material3 = make_shared<Metal> (Color (0.7, 0.6, 0.5), 0.0);
+    m_World.add (make_shared<sphere> (Point3 (4, 1, 0), 1.0, material3));
+
 
     // start worker
     m_WorkerRunning = true;

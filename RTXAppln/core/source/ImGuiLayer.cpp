@@ -50,16 +50,21 @@ void ImGuiLayer::EndFrame ()
 
 void ImGuiLayer::ProcessEvent (UINT msg, WPARAM wParam, LPARAM lParam) { }
 
-void ImGuiLayer::OnUpdate (double ts) { }
+void ImGuiLayer::OnUpdate (double ts) 
+{     
+}
 
 void ImGuiLayer::OnRender ()
 {
+    bool renderClicked = false;
     ImGui::SetNextWindowSize (ImVec2 (320, VIEWPORT_HEIGHT));
     ImGui::Begin ("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-    ImGui::NewLine ();
-    ImGui::Text ("Last render: %.3f ms", m_GetLastRenderTime ? m_GetLastRenderTime () : 0.0);
+    ImGui::NewLine ();    
+    ImGui::Text ("Last render: %.3f seconds", m_GetLastRenderTime ? m_GetLastRenderTime () : 0.0);
+    
     ImGui::Separator ();
-    if (ImGui::Button ("Render"))
+    renderClicked = ImGui::Button ("Render");
+    if (renderClicked)
     {
         Logger::Log (Logger::Level::INFO, "ImGui: Render button pressed");
         // enqueue a render job on worker thread (fast non-blocking)
